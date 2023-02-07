@@ -11,6 +11,7 @@ namespace XvsO
         private int choice;
         private int flag = 0;
         private bool isEnd = false;
+        private int isPlayerTurn = 1;
 
         public MainWindow()
         {
@@ -21,7 +22,10 @@ namespace XvsO
         {
             arr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             player = true;
+            isEnd = false;
             flag = 0;
+            isPlayerTurn++;
+
             btn1.IsEnabled = true;
             btn2.IsEnabled = true;
             btn3.IsEnabled = true;
@@ -40,17 +44,36 @@ namespace XvsO
             btn7.Content = string.Empty;
             btn8.Content = string.Empty;
             btn9.Content = string.Empty;
+
+            if (isPlayerTurn % 2 == 0)
+            {
+                Button button = (Button)sender;
+                choice = BotMove();
+                button = (Button)FindName("btn" + choice);
+                arr[choice] = 'X';
+                button.Content = 'X';
+                player = true;
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             char[] delete = { 'b', 't', 'n' };
             Button button = (Button)sender;
+
             choice = int.Parse(button.Name.ToString().TrimStart(delete));
             if (arr[choice] != 'X' && arr[choice] != 'O' && player == true)
             {
-                arr[choice] = 'X';
-                button.Content = 'X';
+                if (isPlayerTurn % 2 != 0)
+                {
+                    arr[choice] = 'X';
+                    button.Content = 'X';
+                }
+                else
+                {
+                    arr[choice] = 'O';
+                    button.Content = 'O';
+                }
                 player = false;
 
                 flag = CheckWin();
@@ -70,11 +93,20 @@ namespace XvsO
                 {
                     choice = BotMove();
                     button = (Button)FindName("btn" + choice);
-                    arr[choice] = 'O';
-                    button.Content = 'O';
+                    if (isPlayerTurn % 2 == 0)
+                    {
+                        arr[choice] = 'X';
+                        button.Content = 'X';
+                    }
+                    else 
+                    {
+                        arr[choice] = 'O';
+                        button.Content = 'O';
+                    }
                     player = true;
                 }
-                if (isEnd == false) {
+                if (isEnd == false)
+                {
                     flag = CheckWin();
                     if (flag == 1)
                     {
@@ -87,7 +119,7 @@ namespace XvsO
                         DisableButtons();
                     }
                 }
-            } 
+            }
         }
 
         private int CheckWin()
@@ -161,15 +193,15 @@ namespace XvsO
 
         private void DisableButtons()
         {
-            btn1.IsEnabled = true;
-            btn2.IsEnabled = true;
-            btn3.IsEnabled = true;
-            btn4.IsEnabled = true;
-            btn5.IsEnabled = true;
-            btn6.IsEnabled = true;
-            btn7.IsEnabled = true;
-            btn8.IsEnabled = true;
-            btn9.IsEnabled = true;
+            btn1.IsEnabled = false;
+            btn2.IsEnabled = false;
+            btn3.IsEnabled = false;
+            btn4.IsEnabled = false;
+            btn5.IsEnabled = false;
+            btn6.IsEnabled = false;
+            btn7.IsEnabled = false;
+            btn8.IsEnabled = false;
+            btn9.IsEnabled = false;
         }
 
     }
